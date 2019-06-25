@@ -1,2 +1,4 @@
 # learn-go-wiki
-My version after following the https://golang.org/doc/articles/wiki/ tutorial for writing a simple wiki in go.
+My version of the golang wiki tutorial (https://golang.org/doc/articles/wiki/).
+
+Nothing special, run with either go build wiki.go or go run wiki.go
