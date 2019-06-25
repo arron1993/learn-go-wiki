@@ -8,7 +8,10 @@ import (
     "regexp"
 )
 
-var templates = template.Must(template.ParseFiles("templates/edit.html", "templates/view.html"))
+var templates = map[string]*template.Template{}
+
+
+
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
 type Page struct {
@@ -22,7 +25,7 @@ func (p *Page) save() error {
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-    err := templates.ExecuteTemplate(w, tmpl + ".html", p)
+    err := templates[tmpl].ExecuteTemplate(w, "layout.html", p)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
@@ -84,6 +87,8 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 func main() {
     // for the root do not use makeHandler as we are not interested in
     // validating the title. It is just a redirect
+    templates["view"] = template.Must(template.ParseFiles("templates/view.html", "templates/layout.html"))
+    templates["edit"] = template.Must(template.ParseFiles("templates/edit.html", "templates/layout.html"))
     http.HandleFunc("/", rootHandler)
     http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
     http.HandleFunc("/view/", makeHandler(viewHandler))

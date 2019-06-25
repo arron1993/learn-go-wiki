@@ -1,10 +1,10 @@
-<!DOCTYPE html>
 <html>
-    <head>
+{{ define "head" }}
         <title>{{.Title}}</title>
         <link rel="stylesheet" type="text/css" href="/static/main.css">
-    </head>
-    <body>
+{{ end }}
+
+{{ define "body" }}
         <header>
             <h1>{{.Title}}</h1>
         </header>
@@ -12,7 +12,6 @@
             <p>[<a href="/edit/{{.Title}}">edit</a>]</p>
             <div>{{printf "%s" .Body}}</div>
         </main>
-    <body>
+
+{{ end }}
 </html>
-
-

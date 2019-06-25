@@ -1,6 +1,19 @@
-<h1>Editing {{.Title}}</h1>
+{{ define "head"}}
+    <title> Editing {{.Title}} </title>
+{{ end }}
 
-<form action="/save/{{.Title}}" method="POST">
-<div><textarea name="body" rows="20" cols="80">{{printf "%s" .Body}}</textarea></div>
-<div><input type="submit" value="Save"></div>
-</form>
+{{ define "body" }}
+    <header>
+        <h1>Editing {{.Title}}</h1>
+    </header>
+    <main>
+        <form action="/save/{{.Title}}" method="POST">
+            <div>
+                <textarea name="body" rows="20" cols="80">{{printf "%s" .Body}}</textarea>
+            </div>
+            <div>
+                <input type="submit" value="Save">
+            </div>
+        </form>
+    </main>
+{{ end }}
