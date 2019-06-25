@@ -17,25 +17,26 @@ type Page struct {
 }
 
 func (p *Page) save() error {
-    filename := p.Title + ".txt"
+    filename := "data/" + p.Title + ".txt"
     return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-    err := templates.ExecuteTemplate(w, tmpl+".html", p)
+    err := templates.ExecuteTemplate(w, tmpl + ".html", p)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
 }
 
 func loadPage(title string) (*Page, error) {
-    filename := title + ".txt"
+    filename := "data/" + title + ".txt"
     body, err := ioutil.ReadFile(filename)
     if err != nil {
         return nil, err
     }
     return &Page{Title: title, Body: body}, nil
 }
+
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         m := validPath.FindStringSubmatch(r.URL.Path)
