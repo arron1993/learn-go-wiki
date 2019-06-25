@@ -85,8 +85,10 @@ func main() {
     // for the root do not use makeHandler as we are not interested in
     // validating the title. It is just a redirect
     http.HandleFunc("/", rootHandler)
+    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
     http.HandleFunc("/view/", makeHandler(viewHandler))
     http.HandleFunc("/edit/", makeHandler(editHandler))
     http.HandleFunc("/save/", makeHandler(saveHandler))
+
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
