@@ -1,6 +1,36 @@
-header {
-    padding-left: 5em;
+@font-face {
+    font-family: 'Roboto';
+    src: url('/static/fonts/Roboto-Regular.ttf')  format('truetype');
 }
-main {
-    padding-left: 10em;
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 200px auto auto;
+    grid-auto-rows: minmax(100px, auto);
+}
+
+.header {
+    background-color: #f1f1f1;
+    border: 1px solid #d3d3d3;
+    grid-column: 2 / 4;
+    grid-row: 1;
+    padding-left: 0.5em;
+}
+.content {
+    grid-column: 2 / 4;
+    grid-row: 2 / 9;
+    padding: 0.5em 1em;
+}
+.left-menu {
+    background-color: #f1f1f1;
+    border: 1px solid #d3d3d3;
+    display: flex;
+    flex-direction: column;
+    grid-column: 1;
+    grid-row: 2 / 9;
 }

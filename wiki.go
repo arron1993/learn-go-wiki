@@ -6,6 +6,7 @@ import (
     "log"
     "html/template"
     "regexp"
+    "path/filepath"
 )
 
 var templates = map[string]*template.Template{}
@@ -17,6 +18,7 @@ var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 type Page struct {
     Title string
     Body []byte
+    Menu []string
 }
 
 func (p *Page) save() error {
@@ -37,7 +39,19 @@ func loadPage(title string) (*Page, error) {
     if err != nil {
         return nil, err
     }
-    return &Page{Title: title, Body: body}, nil
+    files, err := filepath.Glob("data/*.txt")
+
+    filenameRegexp := regexp.MustCompile("^data/([^.]+).txt")
+    filesNoPath := []string{}
+    for _, file := range files {
+        match := filenameRegexp.FindStringSubmatch(file)
+        filesNoPath = append(filesNoPath, match[1])
+    }
+
+    if err != nil {
+        log.Fatal(err)
+    }
+    return &Page{Title: title, Body: body, Menu: filesNoPath}, nil
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
@@ -84,11 +98,15 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
     http.Redirect(w, r, "/view/" + title, http.StatusFound)
 }
 
+func registerTemplates() {
+    templates["view"] = template.Must(template.ParseFiles("templates/view.html", "templates/layout.html"))
+    templates["edit"] = template.Must(template.ParseFiles("templates/edit.html", "templates/layout.html"))
+}
+
 func main() {
     // for the root do not use makeHandler as we are not interested in
     // validating the title. It is just a redirect
-    templates["view"] = template.Must(template.ParseFiles("templates/view.html", "templates/layout.html"))
-    templates["edit"] = template.Must(template.ParseFiles("templates/edit.html", "templates/layout.html"))
+    registerTemplates()
     http.HandleFunc("/", rootHandler)
     http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
     http.HandleFunc("/view/", makeHandler(viewHandler))

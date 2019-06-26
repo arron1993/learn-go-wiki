@@ -1,17 +1,10 @@
 <html>
 {{ define "head" }}
         <title>{{.Title}}</title>
-        <link rel="stylesheet" type="text/css" href="/static/main.css">
 {{ end }}
 
-{{ define "body" }}
-        <header>
-            <h1>{{.Title}}</h1>
-        </header>
-        <main>
-            <p>[<a href="/edit/{{.Title}}">edit</a>]</p>
-            <div>{{printf "%s" .Body}}</div>
-        </main>
-
+{{ define "content" }}
+    <div>{{printf "%s" .Body}}</div>
+    <p>[<a href="/edit/{{.Title}}">edit</a>]</p>
 {{ end }}
 </html>
